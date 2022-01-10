@@ -1,0 +1,11 @@
+
+Selain-->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Palvelin->Selain:HTML-koodi
+Selain-->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Palvelin->Selain: main.css
+Selain-->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Palvelin-->Selain: main.js
+note over Selain:selain suorittaa palvelimelta saatua koodia, joka luo listan ja listan sisällön
+Selain-->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Palvelin->Selain: JSON-data 
+note over Palvelin: tässä kohtaa palvelin lähettää möykyn JSON-dataa, josta löytyy data listalle, nyt selain voi suorittaa ylempänä saadun koodin loppuun
