@@ -8,10 +8,16 @@ const App = () => {
 
   return (
     <div>
-      <p>Hello world!
-      </p>
+      <Hello hello={Hello}></Hello>
+    </div>
+    
+  )
+}
+const Hello = () =>{
+  return(
+    <div>
+      <p>Hello world!</p>
     </div>
   )
 }
-
 export default App
