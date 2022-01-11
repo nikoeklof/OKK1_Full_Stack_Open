@@ -1,23 +1,7 @@
-import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
 
-const App = () => {
-  // tallenna napit omaan tilaansa
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-
-  return (
-    <div>
-      <Hello hello={Hello}></Hello>
-    </div>
-    
-  )
-}
-const Hello = () =>{
-  return(
-    <div>
-      <p>Hello world!</p>
-    </div>
-  )
-}
-export default App
+ReactDOM.render(
+  <App />, 
+  document.getElementById('root')
+)
