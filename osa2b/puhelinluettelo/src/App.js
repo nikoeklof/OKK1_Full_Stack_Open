@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 const App = () => {
-  const [persons, setPersons] = useState([  { name: 'Arto Hellas', number: '040-123456' },
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '040-123456' },
   { name: 'Ada Lovelace', number: '39-44-5323523' },
   { name: 'Dan Abramov', number: '12-43-234345' },
   { name: 'Mary Poppendieck', number: '39-23-6423122' }])
@@ -12,67 +12,83 @@ const App = () => {
     setFilter(event.target.value)
   }
   const handleNameChange = (event) => {
+
     setNewName(event.target.value)
   }
   const handleNumberChange = (event) => {
     setNewphoneNumber(event.target.value)
   }
- 
-  
+
   return (
     <div>
-    <h2>Phonebook</h2>
+      <h2>Phonebook</h2>
+      <Filter filter={[{ filter, changeFilter }]} />
 
-    {/* <Filter filter={[persons, filter]}/> */}
+      <h3>Add a new</h3>
+      <PersonForm form={[{ newName, handleNameChange }, { phoneNumber, handleNumberChange }, { persons, setPersons }]} />
 
-    <h3>Add a new</h3>
-
-    <PersonForm name={newName}/>
-  
-    
-
-    <h3>Numbers</h3>
-
-    <Persons persons={persons}/>
-  </div>
+      <h3>Numbers</h3>
+      <Persons persons={[persons, filter]} />
+    </div>
   )
 
 }
-const Filter = (props) =>{
-      return null
-    // var filtered = []
-    // for (let i = 0; i < props.persons.length; i++) {
-    //   let a = props.persons[i].name.toUpperCase()
-    //   let b = props.filter.toUpperCase()
-    //   console.log(a)
-    //   if (a.includes(b)) {
-    //     filtered.push(props.persons[i])
-    //   }
-    // }
-    // return filtered.map(person => <li key={person.name}>{person.name} <br></br> Number: {person.number}</li>)
-  
+const Filter = (props) => {
+  return (
+    <div>
+      <h2>Filter numbers</h2>
+      <input value={props.filter[0].filter} onChange={props.filter[0].changeFilter} />
+    </div>
+  )
+
+
 }
 const PersonForm = (props) => {
-  console.log(props)
   return (
-   
-    <div>
-    name: <input value={props.form[0]}/>
-    <br></br>
-    <br></br>
-    phone number: <input value={props.form[1]}/>
-    <br></br>
-    </div>
-   
+    <form onSubmit={(e) => {
+      e.preventDefault()
+      let name = props.form[0].newName
+      let number = props.form[1].phoneNumber
+      if (number === '') {
+        number = 'No number given'
+      }
+      props.form[2].setPersons(props.form[2].persons.concat({ name: name, number: number }))
+    }}>
+      <div>
+        name: <input value={props.form[0].newName} onChange={props.form[0].handleNameChange} />
+        <br></br>
+        <br></br>
+        phone number: <input value={props.form[1].phoneNumber} onChange={props.form[1].handleNumberChange} />
+        <br></br>
+        <button type='submit'>add</button>
+      </div>
+    </form>
   )
 }
 const Persons = (props) => {
-  return (
-    <div>
-      {props.persons.map(person => <p key={person.name}>Name: {person.name} <br></br>Number: {person.number}</p>)}
-    </div>
-  )
+  let filttered = []
+  let filter = props.persons[1].toUpperCase()
+  if (filter !== '') {
+    for (let i = 0; i < props.persons[0].length; i++) {
+      let person = props.persons[0][i].name.toUpperCase()
+      if (person.includes(filter)) {
+        filttered.push(props.persons[0][i])
+      }
+    }
+    return (
+      <div>
+        {filttered.map(person => <p key={person.name}>Name: {person.name} <br></br>Number: {person.number}</p>)}
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        {props.persons[0].map(person => <p key={person.name}>Name: {person.name} <br></br>Number: {person.number}</p>)}
+      </div>
+    )
+  }
 }
+
 
 
 
