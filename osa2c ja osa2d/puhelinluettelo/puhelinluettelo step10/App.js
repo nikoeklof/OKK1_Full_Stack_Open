@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import axiosService from './axiosService'
 
-
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [phoneNumber, setNewphoneNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [message, setMessage] = useState('')
   const hook = () => {
     axiosService.getAll().then(response => {
       setPersons(response.data)
@@ -24,21 +22,16 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewphoneNumber(event.target.value)
   }
-  const handleMessageChange = (msg) => {
-    setMessage(msg)
-    setTimeout(() => {setMessage('')}, 3000)
-  }
   const deletePerson = (id, name) => {
     if (window.confirm(`Are you sure you want to delete ${name}`)) {
-      handleMessageChange(`${name} deleted.`)
       axiosService.destroy(id).then(() => {
-        
         axiosService.getAll().then(response => {
           let personscopy = response.data
+          console.log(personscopy)
           
           for(let i = 0; i < personscopy.length; i++){
             let newID = i + 1
-            axiosService.update(personscopy[i].id , {name: personscopy[i].name, number: personscopy[i].number, id: newID})
+            axiosService.update(personscopy[i].id , {name: personscopy[i].name, number: personscopy[i].number, id: newID}).then(() => {console.log(personscopy[i])})
           }
           axiosService.getAll().then(response => {setPersons(response.data)})
         })
@@ -48,15 +41,18 @@ const App = () => {
     }
 
   }
-  
+
+
+
+
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification notification={message}/>
       <Filter filter={[{ filter, changeFilter }]} />
 
       <h3>Add a new</h3>
-      <PersonForm form={[{ newName, handleNameChange }, { phoneNumber, handleNumberChange }, { persons, setPersons }, {message, handleMessageChange}]} />
+      <PersonForm form={[{ newName, handleNameChange }, { phoneNumber, handleNumberChange }, { persons, setPersons }]} />
 
       <h3>Numbers</h3>
       <Persons persons={[persons, filter, deletePerson]} />
@@ -64,9 +60,6 @@ const App = () => {
   )
 
 }
-
-
-
 const Filter = (props) => {
   return (
     <div>
@@ -96,7 +89,7 @@ const PersonForm = (props) => {
             if (window.confirm(`${name} is already on the list, do you want to update old number with a new one?`)) {
               updated = true
               axiosService.update(i + 1, { name: name, number: number, id: i + 1 }).then(() => {
-              props.form[3].handleMessageChange(`${name} updated`)
+              console.log(`${name} updated`)
               axiosService.getAll().then(response => {
                 props.form[2].setPersons(response.data)
               })
@@ -111,8 +104,7 @@ const PersonForm = (props) => {
         props.form[2].setPersons(props.form[2].persons.concat({ name: name, number: number, id: props.form[2].persons.length + 1 }))
         axiosService.create({ name: name, number: number, id: id + 1})
           .then(() => {
-           
-            props.form[3].handleMessageChange(`${name} added`)
+            console.log('success')
           })
       }
      
@@ -151,32 +143,6 @@ const Persons = (props) => {
       </div>
     )
   }
-}
-const Notification = (message) => {
-  const notificationStyle = {
-    color: 'green',
-    fontSize: 20,
-    border:'4px solid green',
-    borderRadius: '10px',
-    background: '#d3ffce'
-    
-  }
-  const messageStyle= {
-    padding:'5px'
-  }
-  if (message.notification  === '') {
-    return (
-      <div className='notification'>
-        <br></br>
-        </div>
-    )
-  }
-  return (
-    <div className='notification' style={notificationStyle}>
-     <p style={messageStyle}>{message.notification}</p> 
-    </div>
-  )
-
 }
 
 
